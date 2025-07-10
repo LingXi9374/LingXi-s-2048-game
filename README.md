@@ -20,7 +20,7 @@
 
 1.  **克隆项目**
     ```bash
-    git clone https://github.com/LingXi9374/LingXis2048.git
+    git clone https://github.com/LingXi9374/LingXi-s-2048-game.git
     ```
 2.  **在 Android Studio 中打开**
     *   启动 Android Studio
