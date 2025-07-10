@@ -36,7 +36,7 @@
 
 *请在此处添加一张或多张应用截图来展示你的游戏界面。*
 
-![Game Screenshot](Screenshot.png)
+![Game Screenshot](Screenshot.jpg)
 
 ## 📄 许可证
 
