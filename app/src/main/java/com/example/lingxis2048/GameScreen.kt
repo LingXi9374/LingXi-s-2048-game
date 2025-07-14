@@ -204,13 +204,13 @@ fun ScorePopup(data: ScoreAnimationData, tileSize: Dp) {
     }
 
     val animatedY = animateDpAsState(
-        targetValue = if (startAnimation) (tileSize * data.position.first) - 60.dp else (tileSize * data.position.first),
-        animationSpec = tween(durationMillis = 5000, easing = LinearEasing),
+        targetValue = if (startAnimation) (tileSize * data.position.first) - 80.dp else (tileSize * data.position.first) - 20.dp,
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
         label = "scoreY"
     )
     val alpha by animateFloatAsState(
         targetValue = if (startAnimation) 0f else 1f,
-        animationSpec = tween(durationMillis = 5000, easing = LinearEasing),
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
         label = "scoreAlpha"
     )
 

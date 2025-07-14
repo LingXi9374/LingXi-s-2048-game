@@ -144,7 +144,7 @@ class GameViewModel : ViewModel() {
                         val animationData = ScoreAnimationData(mergedTile.value, mergedTile.position)
                         scoreAnimation.add(animationData)
                         launch {
-                            delay(5000) // Duration of the score popup
+                            delay(3000) // Duration of the score popup
                             scoreAnimation.remove(animationData)
                         }
                     }
