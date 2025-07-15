@@ -23,10 +23,16 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS") ?: project.property("SIGNING_KEY_ALIAS") as String
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD") ?: project.property("SIGNING_KEY_PASSWORD") as String
+            val localProperties = java.util.Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(localPropertiesFile.inputStream())
+            }
+
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS") ?: localProperties.getProperty("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD") ?: localProperties.getProperty("SIGNING_KEY_PASSWORD")
             storeFile = file("../lingxis-keystore.jks")
-            storePassword = System.getenv("SIGNING_KEY_STORE_PASSWORD") ?: project.property("SIGNING_KEY_STORE_PASSWORD") as String
+            storePassword = System.getenv("SIGNING_KEY_STORE_PASSWORD") ?: localProperties.getProperty("SIGNING_KEY_STORE_PASSWORD")
         }
     }
     buildTypes {

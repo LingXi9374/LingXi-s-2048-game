@@ -2,9 +2,6 @@
 *.jks
 *.b64
 
-# Gradle properties
-gradle.properties
-
 # Default ignored files
 *.iml
 .gradle
