@@ -21,13 +21,23 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS") ?: project.property("SIGNING_KEY_ALIAS") as String
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD") ?: project.property("SIGNING_KEY_PASSWORD") as String
+            storeFile = file("../lingxis-keystore.jks")
+            storePassword = System.getenv("SIGNING_KEY_STORE_PASSWORD") ?: project.property("SIGNING_KEY_STORE_PASSWORD") as String
+        }
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

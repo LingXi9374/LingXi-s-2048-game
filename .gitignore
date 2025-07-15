@@ -1,3 +1,11 @@
+# Keystore files
+*.jks
+*.b64
+
+# Gradle properties
+gradle.properties
+
+# Default ignored files
 *.iml
 .gradle
 /local.properties
@@ -13,3 +21,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+*.jks
+app/release
