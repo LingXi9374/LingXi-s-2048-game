@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -44,7 +45,7 @@ fun SettingsScreen(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Enable Sound")
+            Text("Enable Sound", style = MaterialTheme.typography.bodyLarge)
             Switch(
                 checked = soundEnabled,
                 onCheckedChange = {
@@ -56,7 +57,7 @@ fun SettingsScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Volume: ${(soundVolume * 100).toInt()}%")
+        Text("Volume: ${(soundVolume * 100).toInt()}%", style = MaterialTheme.typography.bodyLarge)
         Slider(
             value = soundVolume,
             onValueChange = {
@@ -69,7 +70,7 @@ fun SettingsScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(onClick = { navController.navigate("about") }) {
-            Text("About This Game")
+            Text("About This Game", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
