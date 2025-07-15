@@ -1,7 +1,6 @@
 package com.example.lingxis2048
 
 import android.app.Activity
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -25,7 +24,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -101,14 +105,42 @@ fun GameScreen(navController: NavController) {
                     modifier = Modifier.align(Alignment.TopStart)
                 )
 
-                GameBoard(
-                    gameViewModel = gameViewModel,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .aspectRatio(1f)
-                        .align(Alignment.Center)
-                        .then(gestureModifier)
-                )
+                Column(modifier = Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box {
+                        GameBoard(
+                            gameViewModel = gameViewModel,
+                            modifier = Modifier
+                                .fillMaxHeight(0.7f)
+                                .aspectRatio(1f)
+                                .then(gestureModifier)
+                        )
+                        if (isGameOver) {
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.White.copy(alpha = 0.35f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    "Game Over!",
+                                    fontSize = 32.sp,
+                                    color = Color.Red,
+                                    fontFamily = appFontFamily
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        IconButton(onClick = { gameViewModel.startGame() }) {
+                            Icon(Icons.Filled.Refresh, contentDescription = "New Game")
+                        }
+                        IconButton(onClick = { navController.navigate("settings") }) {
+                            Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                        }
+                    }
+                }
 
                 Text(
                     text = "Score: $score",
@@ -116,26 +148,6 @@ fun GameScreen(navController: NavController) {
                     fontFamily = appFontFamily,
                     modifier = Modifier.align(Alignment.BottomStart)
                 )
-
-                Column(modifier = Modifier.align(Alignment.BottomEnd), horizontalAlignment = Alignment.End) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = { gameViewModel.startGame() }) {
-                            Text("New Game", fontFamily = appFontFamily)
-                        }
-                        Button(onClick = { navController.navigate("settings") }) {
-                            Text("Settings", fontFamily = appFontFamily)
-                        }
-                    }
-                    AnimatedVisibility(visible = isGameOver) {
-                        Text(
-                            "Game Over!",
-                            fontSize = 32.sp,
-                            color = Color.Red,
-                            fontFamily = appFontFamily,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                    }
-                }
             }
         } else {
             // Portrait Layout
@@ -148,32 +160,41 @@ fun GameScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Score: $score", fontSize = 24.sp, fontFamily = appFontFamily)
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { gameViewModel.startGame() }) {
-                        Text("New Game", fontFamily = appFontFamily)
-                    }
-                    Button(onClick = { navController.navigate("settings") }) {
-                        Text("Settings", fontFamily = appFontFamily)
+
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    GameBoard(
+                        gameViewModel = gameViewModel,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .then(gestureModifier)
+                    )
+                    if (isGameOver) {
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.White.copy(alpha = 0.35f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Game Over!",
+                                fontSize = 32.sp,
+                                color = Color.Red,
+                                fontFamily = appFontFamily
+                            )
+                        }
                     }
                 }
 
-                GameBoard(
-                    gameViewModel = gameViewModel,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .aspectRatio(1f)
-                        .then(gestureModifier)
-                )
-
-                AnimatedVisibility(visible = isGameOver) {
-                    Text(
-                        "Game Over!",
-                        fontSize = 32.sp,
-                        color = Color.Red,
-                        fontFamily = appFontFamily,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    IconButton(onClick = { gameViewModel.startGame() }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "New Game")
+                    }
+                    IconButton(onClick = { navController.navigate("settings") }) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                    }
                 }
             }
         }
