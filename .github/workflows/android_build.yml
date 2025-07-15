@@ -20,6 +20,9 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.SIGNING_KEY_STORE_BASE64 }}" | base64 --decode > lingxis-keystore.jks
 
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+
       - name: Build with Gradle
         run: ./gradlew assembleRelease
         env:
