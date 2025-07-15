@@ -1,5 +1,7 @@
 package com.example.lingxis2048
 
+import android.app.Activity
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -8,11 +10,30 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -20,94 +41,165 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.*
 import kotlin.math.abs
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.Font
 
 private val appFontFamily = FontFamily(
     Font(R.font.leigo_regular)
 )
 
 @Composable
-fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
+fun GameScreen(navController: NavController) {
+    val context = LocalContext.current
+    val factory = GameViewModelFactory((context as Activity).application)
+    val gameViewModel: GameViewModel = viewModel(factory = factory)
     val score by gameViewModel.score
     val isGameOver by gameViewModel.isGameOver
-    var totalDrag by remember { mutableStateOf(Offset.Zero) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDragStart = { totalDrag = Offset.Zero },
-                    onDrag = { _, dragAmount -> totalDrag += dragAmount },
-                    onDragEnd = {
-                        val swipeThreshold = 50f
-                        val (dx, dy) = totalDrag
-                        if (abs(dx) > abs(dy)) {
-                            if (abs(dx) > swipeThreshold) {
-                                if (dx > 0) gameViewModel.onSwipe(SwipeDirection.RIGHT)
-                                else gameViewModel.onSwipe(SwipeDirection.LEFT)
-                            }
-                        } else {
-                            if (abs(dy) > swipeThreshold) {
-                                if (dy > 0) gameViewModel.onSwipe(SwipeDirection.DOWN)
-                                else gameViewModel.onSwipe(SwipeDirection.UP)
-                            }
+    val gestureModifier = Modifier.pointerInput(Unit) {
+        var totalDrag by mutableStateOf(Offset.Zero)
+        detectDragGestures(
+            onDragStart = { totalDrag = Offset.Zero },
+            onDrag = { _, dragAmount -> totalDrag += dragAmount },
+            onDragEnd = {
+                val swipeThreshold = 50f
+                val (dx, dy) = totalDrag
+                if (abs(dx) > abs(dy)) {
+                    if (abs(dx) > swipeThreshold) {
+                        if (dx > 0) gameViewModel.onSwipe(SwipeDirection.RIGHT)
+                        else gameViewModel.onSwipe(SwipeDirection.LEFT)
+                    }
+                } else {
+                    if (abs(dy) > swipeThreshold) {
+                        if (dy > 0) gameViewModel.onSwipe(SwipeDirection.DOWN)
+                        else gameViewModel.onSwipe(SwipeDirection.UP)
+                    }
+                }
+            }
+        )
+    }
+
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val isLandscape = maxWidth > maxHeight
+
+        if (isLandscape) {
+            // Landscape Layout
+            Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                Text(
+                    text = "LingXi's 2048",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = appFontFamily,
+                    modifier = Modifier.align(Alignment.TopStart)
+                )
+
+                GameBoard(
+                    gameViewModel = gameViewModel,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .aspectRatio(1f)
+                        .align(Alignment.Center)
+                        .then(gestureModifier)
+                )
+
+                Text(
+                    text = "Score: $score",
+                    fontSize = 24.sp,
+                    fontFamily = appFontFamily,
+                    modifier = Modifier.align(Alignment.BottomStart)
+                )
+
+                Column(modifier = Modifier.align(Alignment.BottomEnd), horizontalAlignment = Alignment.End) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(onClick = { gameViewModel.startGame() }) {
+                            Text("New Game", fontFamily = appFontFamily)
+                        }
+                        Button(onClick = { navController.navigate("settings") }) {
+                            Text("Settings", fontFamily = appFontFamily)
                         }
                     }
-                )
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("LingXi's 2048", fontSize = 32.sp, fontWeight = FontWeight.Bold, fontFamily = appFontFamily)
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Score: $score", fontSize = 24.sp, fontFamily = appFontFamily)
-                Button(onClick = { gameViewModel.startGame() }) {
-                    Text("New Game", fontFamily = appFontFamily)
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-            ) {
-                val tileSize = maxWidth / gameViewModel.gridSize
-
-                Grid(gameViewModel.gridSize, tileSize)
-
-                gameViewModel.tiles.forEach { tile ->
-                    key(tile.id) {
-                        AnimatedTile(tile = tile, tileSize = tileSize)
-                    }
-                }
-
-                gameViewModel.scoreAnimation.forEach { data ->
-                    key(data.id) {
-                        ScorePopup(data = data, tileSize = tileSize)
+                    AnimatedVisibility(visible = isGameOver) {
+                        Text(
+                            "Game Over!",
+                            fontSize = 32.sp,
+                            color = Color.Red,
+                            fontFamily = appFontFamily,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
                     }
                 }
             }
-
-            if (isGameOver) {
+        } else {
+            // Portrait Layout
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("LingXi's 2048", fontSize = 32.sp, fontWeight = FontWeight.Bold, fontFamily = appFontFamily)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Game Over!", fontSize = 32.sp, color = Color.Red, fontFamily = appFontFamily)
+                Text("Score: $score", fontSize = 24.sp, fontFamily = appFontFamily)
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { gameViewModel.startGame() }) {
+                        Text("New Game", fontFamily = appFontFamily)
+                    }
+                    Button(onClick = { navController.navigate("settings") }) {
+                        Text("Settings", fontFamily = appFontFamily)
+                    }
+                }
+
+                GameBoard(
+                    gameViewModel = gameViewModel,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .aspectRatio(1f)
+                        .then(gestureModifier)
+                )
+
+                AnimatedVisibility(visible = isGameOver) {
+                    Text(
+                        "Game Over!",
+                        fontSize = 32.sp,
+                        color = Color.Red,
+                        fontFamily = appFontFamily,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun GameBoard(gameViewModel: GameViewModel, modifier: Modifier = Modifier) {
+    BoxWithConstraints(
+        modifier = modifier
+            .background(Color.LightGray, RoundedCornerShape(8.dp))
+    ) {
+        val tileSize = maxWidth / gameViewModel.gridSize
+
+        Grid(gameViewModel.gridSize, tileSize)
+
+        gameViewModel.tiles.forEach { tile ->
+            key(tile.id) {
+                AnimatedTile(tile = tile, tileSize = tileSize)
+            }
+        }
+
+        gameViewModel.scoreAnimation.forEach { data ->
+            key(data.id) {
+                ScorePopup(data = data, tileSize = tileSize)
             }
         }
     }
@@ -187,7 +279,7 @@ fun AnimatedTile(tile: Tile, tileSize: Dp) {
     ) {
         Text(
             text = tile.value.toString(),
-            fontSize = 24.sp,
+            fontSize = (tileSize.value / 3).sp,
             fontWeight = FontWeight.Bold,
             color = if (tile.value > 4) Color.White else Color.Black,
             fontFamily = appFontFamily

@@ -1,8 +1,9 @@
 package com.example.lingxis2048
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -19,18 +20,19 @@ data class Tile(
     var position: Pair<Int, Int>,
     var isNew: Boolean = true,
     var isMerged: Boolean = false,
-    var mergedFrom: List<Tile>? = null,
+var mergedFrom: List<Tile>? = null,
     val isMerging: Boolean = false
 )
 
 data class ScoreAnimationData(val value: Int, val position: Pair<Int, Int>, val id: String = UUID.randomUUID().toString())
 
-class GameViewModel : ViewModel() {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
     val gridSize = 4
     val tiles = mutableStateListOf<Tile>()
     val score = mutableStateOf(0)
     val isGameOver = mutableStateOf(false)
     val scoreAnimation = mutableStateListOf<ScoreAnimationData>()
+    private val soundManager = SoundManager(application.applicationContext)
 
     init {
         startGame()
@@ -125,6 +127,11 @@ class GameViewModel : ViewModel() {
         }
 
         if (moved) {
+            if (scoreIncrease > 0) {
+                soundManager.playSound(SoundManager.MERGE_SOUND)
+            } else {
+                soundManager.playSound(SoundManager.MOVE_SOUND)
+            }
             score.value += scoreIncrease
 
             // 1. Set the state that includes all moving and merging tiles.
@@ -169,5 +176,10 @@ class GameViewModel : ViewModel() {
             if (r < gridSize - 1 && tiles.any { it.position == Pair(r + 1, c) && it.value == tile.value }) return
         }
         isGameOver.value = true
+    }
+    
+    override fun onCleared() {
+        soundManager.release()
+        super.onCleared()
     }
 }

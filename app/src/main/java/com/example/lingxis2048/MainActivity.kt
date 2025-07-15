@@ -11,6 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.lingxis2048.ui.AboutScreen
+import com.example.lingxis2048.ui.SettingsScreen
 import com.example.lingxis2048.ui.theme.LingXis2048Theme
 
 class MainActivity : ComponentActivity() {
@@ -24,12 +29,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LingXis2048Theme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    GameScreen()
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "game") {
+                        composable("game") { GameScreen(navController) }
+                        composable("settings") { SettingsScreen(navController) }
+                        composable("about") { AboutScreen() }
+                    }
                 }
             }
         }
