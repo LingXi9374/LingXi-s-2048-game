@@ -1,4 +1,4 @@
-package com.example.lingxis2048
+package org.lingxi9374.game2048
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

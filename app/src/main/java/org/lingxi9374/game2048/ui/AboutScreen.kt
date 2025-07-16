@@ -1,4 +1,4 @@
-package com.example.lingxis2048.ui
+package org.lingxi9374.game2048.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

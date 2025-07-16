@@ -1,4 +1,4 @@
-package com.example.lingxis2048.ui
+package org.lingxi9374.game2048.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.lingxis2048.SettingsManager
+import org.lingxi9374.game2048.SettingsManager
 
 @Composable
 fun SettingsScreen(navController: NavController) {

@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.lingxis2048"
+    namespace = "com.lingxi9374.game2048"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.lingxis2048"
+        applicationId = "com.lingxi9374.game2048"
         minSdk = 21
         targetSdk = 35
         versionCode = 1

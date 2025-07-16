@@ -1,5 +1,5 @@
 
-package com.example.lingxis2048.ui.theme
+package org.lingxi9374.game2048.ui.theme
 
 import android.app.Activity
 import android.os.Build

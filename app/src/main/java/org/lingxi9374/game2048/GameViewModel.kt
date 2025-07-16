@@ -1,4 +1,4 @@
-package com.example.lingxis2048
+package org.lingxi9374.game2048
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
@@ -20,7 +20,7 @@ data class Tile(
     var position: Pair<Int, Int>,
     var isNew: Boolean = true,
     var isMerged: Boolean = false,
-var mergedFrom: List<Tile>? = null,
+    var mergedFrom: List<Tile>? = null,
     val isMerging: Boolean = false
 )
 

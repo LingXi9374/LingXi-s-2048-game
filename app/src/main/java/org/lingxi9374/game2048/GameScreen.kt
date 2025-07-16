@@ -1,4 +1,4 @@
-package com.example.lingxis2048
+package org.lingxi9374.game2048
 
 import android.app.Activity
 import androidx.compose.animation.core.LinearEasing
@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
+import com.example.lingxis2048.R
 import kotlin.math.abs
 
 private val appFontFamily = FontFamily(

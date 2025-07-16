@@ -1,5 +1,5 @@
 
-package com.example.lingxis2048
+package org.lingxi9374.game2048
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,9 +14,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.lingxis2048.ui.AboutScreen
-import com.example.lingxis2048.ui.SettingsScreen
-import com.example.lingxis2048.ui.theme.LingXis2048Theme
+import org.lingxi9374.game2048.ui.AboutScreen
+import org.lingxi9374.game2048.ui.SettingsScreen
+import org.lingxi9374.game2048.ui.theme.LingXis2048Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
