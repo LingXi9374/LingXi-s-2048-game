@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,8 +54,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.*
-import com.example.lingxis2048.R
+import androidx.navigation.NavController
 import kotlin.math.abs
 
 private val appFontFamily = FontFamily(
@@ -277,7 +277,7 @@ fun AnimatedTile(tile: Tile, tileSize: Dp) {
     )
 
     // A second scale animation for the pop effect
-    var popScale by remember { mutableStateOf(if (tile.isNew || tile.isMerged) 0.5f else 1f) }
+    var popScale by remember { mutableFloatStateOf(if (tile.isNew || tile.isMerged) 0.5f else 1f) }
     LaunchedEffect(tile.id) {
         if (tile.isNew || tile.isMerged) {
             popScale = 1f

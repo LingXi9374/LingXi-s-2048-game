@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.lingxis2048.R
+import org.lingxi9374.game2048.R
 
 // Set of Material typography styles to start with
 val leigoFamily = FontFamily(
