@@ -70,9 +70,17 @@ jobs:
         with:
           name: app-release-artifacts
 
+      - name: Get Release Notes Path
+        id: get_release_notes
+        run: |
+          VERSION_NAME=${{ github.ref_name }}
+          # Remove 'v' prefix
+          VERSION_NAME_NO_V=$(echo $VERSION_NAME | sed 's/^v//')
+          echo "path=releaseNotes/Release${VERSION_NAME_NO_V}.md" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "lingxis2048_*.apk,lingxis2048_*.apk.sha256sum"
-          bodyFile: "releaseNotes/Release${{ replace(github.ref_name, 'v', '') }}.md"
+          bodyFile: "${{ steps.get_release_notes.outputs.path }}"
           token: ${{ secrets.GITHUB_TOKEN }}
