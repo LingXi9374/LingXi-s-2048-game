@@ -74,5 +74,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "lingxis2048_*.apk,lingxis2048_*.apk.sha256sum"
-          bodyFile: "releaseNotes/Release${{ github.ref_name.replace('v', '') }}.md"
+          bodyFile: "releaseNotes/Release${{ replace(github.ref_name, 'v', '') }}.md"
           token: ${{ secrets.GITHUB_TOKEN }}
