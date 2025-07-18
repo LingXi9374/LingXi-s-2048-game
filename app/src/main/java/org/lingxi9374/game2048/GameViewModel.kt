@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.UUID
 import kotlin.random.Random
@@ -31,17 +33,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val tiles = mutableStateListOf<Tile>()
     val score = mutableStateOf(0)
     val isGameOver = mutableStateOf(false)
+    val timeElapsed = mutableStateOf(0L)
     val scoreAnimation = mutableStateListOf<ScoreAnimationData>()
+    private var timerJob: Job? = null
+    private var isGameStarted = false
+    private var timerStartTime = 0L
     private val soundManager = SoundManager(application.applicationContext)
+    private val historyManager = HistoryManager(application.applicationContext)
 
     init {
         startGame()
     }
 
     fun startGame() {
+        timerJob?.cancel()
         tiles.clear()
         score.value = 0
         isGameOver.value = false
+        isGameStarted = false
+        timeElapsed.value = 0L
+        timerStartTime = 0L
         addRandomTile()
         addRandomTile()
     }
@@ -66,6 +77,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onSwipe(direction: SwipeDirection) {
         if (isGameOver.value) return
+
+        if (!isGameStarted) {
+            isGameStarted = true
+            timerStartTime = System.currentTimeMillis()
+            timerJob = viewModelScope.launch {
+                while (isActive) {
+                    timeElapsed.value = System.currentTimeMillis() - timerStartTime
+                    delay(3) // UI refresh rate
+                }
+            }
+        }
 
         val nextTiles = tiles.map { it.copy(isNew = false, isMerged = false, isMerging = false) }.toMutableList()
         var moved = false
@@ -176,6 +198,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             if (r < gridSize - 1 && tiles.any { it.position == Pair(r + 1, c) && it.value == tile.value }) return
         }
         isGameOver.value = true
+        timerJob?.cancel() // Stop the timer when the game is over
+
+        viewModelScope.launch {
+            val maxTile = tiles.maxOfOrNull { it.value } ?: 0
+            val historyEntry = HistoryEntry(
+                score = score.value,
+                timeElapsed = timeElapsed.value,
+                maxTile = maxTile
+            )
+            historyManager.addHistoryEntry(historyEntry)
+        }
     }
     
     override fun onCleared() {

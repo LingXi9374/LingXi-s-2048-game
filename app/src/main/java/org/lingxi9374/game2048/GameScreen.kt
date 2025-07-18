@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -47,19 +48,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import org.lingxi9374.game2048.ui.appFontFamily
 import kotlin.math.abs
-
-private val appFontFamily = FontFamily(
-    Font(R.font.leigo_regular)
-)
 
 @Composable
 fun GameScreen(navController: NavController) {
@@ -68,6 +64,7 @@ fun GameScreen(navController: NavController) {
     val gameViewModel: GameViewModel = viewModel(factory = factory)
     val score by gameViewModel.score
     val isGameOver by gameViewModel.isGameOver
+    val timeElapsed by gameViewModel.timeElapsed
 
     val gestureModifier = Modifier.pointerInput(Unit) {
         var totalDrag by mutableStateOf(Offset.Zero)
@@ -137,6 +134,9 @@ fun GameScreen(navController: NavController) {
                         IconButton(onClick = { gameViewModel.startGame() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = "New Game")
                         }
+                        IconButton(onClick = { navController.navigate("history") }) {
+                            Icon(Icons.Filled.History, contentDescription = "History")
+                        }
                         IconButton(onClick = { navController.navigate("settings") }) {
                             Icon(Icons.Filled.Settings, contentDescription = "Settings")
                         }
@@ -149,6 +149,12 @@ fun GameScreen(navController: NavController) {
                     fontFamily = appFontFamily,
                     modifier = Modifier.align(Alignment.BottomStart)
                 )
+                Text(
+                    text = "Time: ${formatTime(timeElapsed)}",
+                    fontSize = 24.sp,
+                    fontFamily = appFontFamily,
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                )
             }
         } else {
             // Portrait Layout
@@ -159,7 +165,11 @@ fun GameScreen(navController: NavController) {
             ) {
                 Text("LingXi's 2048", fontSize = 32.sp, fontWeight = FontWeight.Bold, fontFamily = appFontFamily)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Score: $score", fontSize = 24.sp, fontFamily = appFontFamily)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Time: ${formatTime(timeElapsed)}", fontSize = 24.sp, fontFamily = appFontFamily)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Score: $score", fontSize = 24.sp, fontFamily = appFontFamily)
+                }
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -193,6 +203,9 @@ fun GameScreen(navController: NavController) {
                     IconButton(onClick = { gameViewModel.startGame() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "New Game")
                     }
+                    IconButton(onClick = { navController.navigate("history") }) {
+                        Icon(Icons.Filled.History, contentDescription = "History")
+                    }
                     IconButton(onClick = { navController.navigate("settings") }) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
@@ -200,6 +213,14 @@ fun GameScreen(navController: NavController) {
             }
         }
     }
+}
+
+private fun formatTime(milliseconds: Long): String {
+    val hours = milliseconds / 3600000
+    val minutes = (milliseconds % 3600000) / 60000
+    val seconds = (milliseconds % 60000) / 1000
+    val millis = milliseconds % 1000
+    return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, millis)
 }
 
 

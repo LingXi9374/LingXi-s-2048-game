@@ -12,47 +12,45 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import org.lingxi9374.game2048.SettingsManager
+import org.lingxi9374.game2048.HistoryEntry
+import org.lingxi9374.game2048.HistoryManager
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun HistoryScreen(navController: NavController) {
     val context = LocalContext.current
-    val settingsManager = remember { SettingsManager(context) }
-
-    var soundEnabled by remember { mutableStateOf(settingsManager.isSoundEnabled()) }
-    var soundVolume by remember { mutableStateOf(settingsManager.getSoundVolume()) }
+    val historyManager = HistoryManager(context)
+    val history by historyManager.history.collectAsState(initial = emptyList())
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
-                title = { Text("Settings", fontFamily = appFontFamily) },
+                title = { Text("History", fontFamily = appFontFamily) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -62,47 +60,44 @@ fun SettingsScreen(navController: NavController) {
             )
         }
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .safeDrawingPadding()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Enable Sound", style = MaterialTheme.typography.bodyLarge)
-                Switch(
-                    checked = soundEnabled,
-                    onCheckedChange = {
-                        soundEnabled = it
-                        settingsManager.setSoundEnabled(it)
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text("Volume: ${(soundVolume * 100).toInt()}%", style = MaterialTheme.typography.bodyLarge)
-            Slider(
-                value = soundVolume,
-                onValueChange = {
-                    soundVolume = it
-                    settingsManager.setSoundVolume(it)
-                },
-                steps = 9
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(onClick = { navController.navigate("about") }) {
-                Text("About This Game", style = MaterialTheme.typography.bodyLarge)
+            items(history) { entry ->
+                HistoryCard(entry)
             }
         }
     }
+}
+
+@Composable
+fun HistoryCard(entry: HistoryEntry) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            val formattedDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                .format(Date(entry.timestamp))
+
+            Text(text = "Date: $formattedDate", style = MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Score: ${entry.score}")
+                Text("Max Tile: ${entry.maxTile}")
+            }
+            Text("Time: ${formatTime(entry.timeElapsed)}")
+        }
+    }
+}
+
+private fun formatTime(milliseconds: Long): String {
+    val hours = milliseconds / 3600000
+    val minutes = (milliseconds % 3600000) / 60000
+    val seconds = (milliseconds % 60000) / 1000
+    val millis = milliseconds % 1000
+    return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, millis)
 }
