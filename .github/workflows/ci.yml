@@ -62,6 +62,9 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
@@ -71,5 +74,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "lingxis2048_*.apk,lingxis2048_*.apk.sha256sum"
-          bodyFile: "releaseNotes/Release${{ github.ref_name }}.md"
+          bodyFile: "releaseNotes/Release${{ github.ref_name.replace('v', '') }}.md"
           token: ${{ secrets.GITHUB_TOKEN }}
