@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +46,7 @@ fun SettingsScreen(navController: NavController) {
     val settingsManager = remember { SettingsManager(context) }
 
     var soundEnabled by remember { mutableStateOf(settingsManager.isSoundEnabled()) }
-    var soundVolume by remember { mutableStateOf(settingsManager.getSoundVolume()) }
+    var soundVolume by remember { mutableFloatStateOf(settingsManager.getSoundVolume()) }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -65,7 +65,6 @@ fun SettingsScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .safeDrawingPadding()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

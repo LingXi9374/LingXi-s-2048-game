@@ -7,7 +7,7 @@
 *   经典的 2048 游戏玩法
 *   简洁的 Material Design 3 界面
 *   游戏状态（得分、最高分）的保存与恢复
-*   撤销上一步操作的功能
+*   ~~撤销上一步操作的功能~~ (Planning)
 
 ## 🚀 技术栈
 
@@ -34,9 +34,7 @@
 
 ## 📸 截图
 
-*请在此处添加一张或多张应用截图来展示你的游戏界面。*
-
-![Game Screenshot](Screenshot.jpg)
+![Game Screenshot 1](Screenshot_1.jpg) ![Game Screenshot 2](Screenshot_2.jpg) ![Game Screenshot 3](Screenshot_3.jpg)
 
 ## 📄 许可证
 

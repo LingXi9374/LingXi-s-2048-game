@@ -3,7 +3,6 @@ package org.lingxi9374.game2048
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
-import org.lingxi9374.game2048.R
 
 class SoundManager(context: Context) {
 

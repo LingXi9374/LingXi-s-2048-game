@@ -1,6 +1,8 @@
 package org.lingxi9374.game2048
 
 import android.app.Application
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -31,9 +33,9 @@ data class ScoreAnimationData(val value: Int, val position: Pair<Int, Int>, val 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     val gridSize = 4
     val tiles = mutableStateListOf<Tile>()
-    val score = mutableStateOf(0)
+    val score = mutableIntStateOf(0)
     val isGameOver = mutableStateOf(false)
-    val timeElapsed = mutableStateOf(0L)
+    val timeElapsed = mutableLongStateOf(0L)
     val scoreAnimation = mutableStateListOf<ScoreAnimationData>()
     private var timerJob: Job? = null
     private var isGameStarted = false
@@ -48,10 +50,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun startGame() {
         timerJob?.cancel()
         tiles.clear()
-        score.value = 0
+        score.intValue = 0
         isGameOver.value = false
         isGameStarted = false
-        timeElapsed.value = 0L
+        timeElapsed.longValue = 0L
         timerStartTime = 0L
         addRandomTile()
         addRandomTile()
@@ -83,7 +85,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             timerStartTime = System.currentTimeMillis()
             timerJob = viewModelScope.launch {
                 while (isActive) {
-                    timeElapsed.value = System.currentTimeMillis() - timerStartTime
+                    timeElapsed.longValue = System.currentTimeMillis() - timerStartTime
                     delay(3) // UI refresh rate
                 }
             }
@@ -154,7 +156,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 soundManager.playSound(SoundManager.MOVE_SOUND)
             }
-            score.value += scoreIncrease
+            score.intValue += scoreIncrease
 
             // 1. Set the state that includes all moving and merging tiles.
             tiles.clear()
@@ -203,8 +205,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val maxTile = tiles.maxOfOrNull { it.value } ?: 0
             val historyEntry = HistoryEntry(
-                score = score.value,
-                timeElapsed = timeElapsed.value,
+                score = score.intValue,
+                timeElapsed = timeElapsed.longValue,
                 maxTile = maxTile
             )
             historyManager.addHistoryEntry(historyEntry)
