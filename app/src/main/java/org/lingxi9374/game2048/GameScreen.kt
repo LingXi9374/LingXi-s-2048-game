@@ -28,10 +28,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -48,10 +51,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.lingxi9374.game2048.ui.appFontFamily
@@ -65,6 +71,20 @@ fun GameScreen(navController: NavController) {
     val score by gameViewModel.score
     val isGameOver by gameViewModel.isGameOver
     val timeElapsed by gameViewModel.timeElapsed
+    val isPaused by gameViewModel.isPaused
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                gameViewModel.pauseGame()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     val gestureModifier = Modifier.pointerInput(Unit) {
         var totalDrag by mutableStateOf(Offset.Zero)
@@ -110,7 +130,7 @@ fun GameScreen(navController: NavController) {
                             modifier = Modifier
                                 .fillMaxHeight(0.7f)
                                 .aspectRatio(1f)
-                                .then(gestureModifier)
+                                .then(if (isPaused) Modifier else gestureModifier)
                         )
                         if (isGameOver) {
                             Box(
@@ -128,16 +148,44 @@ fun GameScreen(navController: NavController) {
                                 )
                             }
                         }
+                        if (isPaused) {
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Black.copy(alpha = 0.5f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PlayArrow,
+                                    contentDescription = "Paused",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(100.dp)
+                                )
+                            }
+                        }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         IconButton(onClick = { gameViewModel.startGame() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = "New Game")
                         }
-                        IconButton(onClick = { navController.navigate("history") }) {
+                        IconButton(onClick = { gameViewModel.togglePause() }, enabled = !isGameOver) {
+                            Icon(
+                                imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                                contentDescription = if (isPaused) "Resume" else "Pause"
+                            )
+                        }
+                        IconButton(onClick = { 
+                            gameViewModel.pauseGame()
+                            navController.navigate("history") 
+                        }) {
                             Icon(Icons.Filled.History, contentDescription = "History")
                         }
-                        IconButton(onClick = { navController.navigate("settings") }) {
+                        IconButton(onClick = { 
+                            gameViewModel.pauseGame()
+                            navController.navigate("settings") 
+                        }) {
                             Icon(Icons.Filled.Settings, contentDescription = "Settings")
                         }
                     }
@@ -178,7 +226,7 @@ fun GameScreen(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1f)
-                            .then(gestureModifier)
+                            .then(if (isPaused) Modifier else gestureModifier)
                     )
                     if (isGameOver) {
                         Box(
@@ -196,6 +244,22 @@ fun GameScreen(navController: NavController) {
                             )
                         }
                     }
+                    if (isPaused) {
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.Black.copy(alpha = 0.5f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = "Paused",
+                                tint = Color.White,
+                                modifier = Modifier.size(100.dp)
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -203,10 +267,22 @@ fun GameScreen(navController: NavController) {
                     IconButton(onClick = { gameViewModel.startGame() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "New Game")
                     }
-                    IconButton(onClick = { navController.navigate("history") }) {
+                    IconButton(onClick = { gameViewModel.togglePause() }, enabled = !isGameOver) {
+                        Icon(
+                            imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                            contentDescription = if (isPaused) "Resume" else "Pause"
+                        )
+                    }
+                    IconButton(onClick = { 
+                        gameViewModel.pauseGame()
+                        navController.navigate("history") 
+                    }) {
                         Icon(Icons.Filled.History, contentDescription = "History")
                     }
-                    IconButton(onClick = { navController.navigate("settings") }) {
+                    IconButton(onClick = { 
+                        gameViewModel.pauseGame()
+                        navController.navigate("settings") 
+                    }) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 }

@@ -37,9 +37,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val isGameOver = mutableStateOf(false)
     val timeElapsed = mutableLongStateOf(0L)
     val scoreAnimation = mutableStateListOf<ScoreAnimationData>()
+    val isPaused = mutableStateOf(false)
     private var timerJob: Job? = null
     private var isGameStarted = false
     private var timerStartTime = 0L
+    private var timePaused = 0L
     private val soundManager = SoundManager(application.applicationContext)
     private val historyManager = HistoryManager(application.applicationContext)
 
@@ -53,10 +55,32 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         score.intValue = 0
         isGameOver.value = false
         isGameStarted = false
+        isPaused.value = false
         timeElapsed.longValue = 0L
         timerStartTime = 0L
         addRandomTile()
         addRandomTile()
+    }
+
+    fun pauseGame() {
+        if (isGameOver.value || isPaused.value) return
+        isPaused.value = true
+        timerJob?.cancel()
+        timePaused = System.currentTimeMillis()
+    }
+
+    fun togglePause() {
+        if (isGameOver.value) return
+        isPaused.value = !isPaused.value
+        if (isPaused.value) {
+            timerJob?.cancel()
+            timePaused = System.currentTimeMillis()
+        } else {
+            if (isGameStarted) {
+                timerStartTime += System.currentTimeMillis() - timePaused
+                startTimer()
+            }
+        }
     }
 
     private fun addRandomTile() {
@@ -78,17 +102,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onSwipe(direction: SwipeDirection) {
-        if (isGameOver.value) return
+        if (isGameOver.value || isPaused.value) return
 
         if (!isGameStarted) {
             isGameStarted = true
             timerStartTime = System.currentTimeMillis()
-            timerJob = viewModelScope.launch {
-                while (isActive) {
-                    timeElapsed.longValue = System.currentTimeMillis() - timerStartTime
-                    delay(3) // UI refresh rate
-                }
-            }
+            startTimer()
         }
 
         val nextTiles = tiles.map { it.copy(isNew = false, isMerged = false, isMerging = false) }.toMutableList()
@@ -187,6 +206,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 delay(150) // Must be >= the alpha animation duration in AnimatedTile
                 tiles.removeAll { it.isMerging }
                 checkGameOver()
+            }
+        }
+    }
+
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (isActive) {
+                timeElapsed.longValue = System.currentTimeMillis() - timerStartTime
+                delay(3) // UI refresh rate
             }
         }
     }
