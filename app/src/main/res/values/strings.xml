@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LingXi\'s 2048</string>
+    <string name="game_screen_score_label">Score: </string>
 </resources>

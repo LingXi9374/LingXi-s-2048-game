@@ -1,5 +1,11 @@
 package org.lingxi9374.game2048.ui
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +22,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +33,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -34,8 +42,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import org.lingxi9374.game2048.SettingsManager
 
@@ -44,9 +54,24 @@ import org.lingxi9374.game2048.SettingsManager
 fun SettingsScreen(navController: NavController) {
     val context = LocalContext.current
     val settingsManager = remember { SettingsManager(context) }
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     var soundEnabled by remember { mutableStateOf(settingsManager.isSoundEnabled()) }
     var soundVolume by remember { mutableFloatStateOf(settingsManager.getSoundVolume()) }
+    var languageDropdownExpanded by remember { mutableStateOf(false) }
+
+    fun Context.findActivity() : Activity? = when(this){
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }
+
+    val onLanguageSelected = { languageCode: String ->
+        context.findActivity()?.runOnUiThread {
+            val appLocale = LocaleListCompat.forLanguageTags(languageCode)
+            AppCompatDelegate.setApplicationLocales(appLocale)
+        }
+    }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -70,6 +95,50 @@ fun SettingsScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { languageDropdownExpanded = true },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        "Change Language",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Change Language",
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                DropdownMenu(
+                    expanded = languageDropdownExpanded,
+                    onDismissRequest = { languageDropdownExpanded = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface)
+                ) {
+                    Text(
+                        "English",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onLanguageSelected("en"); languageDropdownExpanded = false }
+                            .padding(16.dp)
+                    )
+                    Text(
+                        "中文(中国)",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onLanguageSelected("zh-CN"); languageDropdownExpanded = false }
+                            .padding(16.dp)
+                    )
+                }
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

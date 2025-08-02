@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -192,7 +193,7 @@ fun GameScreen(navController: NavController) {
                 }
 
                 Text(
-                    text = "Score: $score",
+                    text = "${stringResource(R.string.game_screen_score_label)}$score",
                     fontSize = 24.sp,
                     fontFamily = appFontFamily,
                     modifier = Modifier.align(Alignment.BottomStart)
