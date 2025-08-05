@@ -34,9 +34,11 @@
 
 ## 📸 截图
 
+<div style="text-align: center;">
 <img src="Screenshot_1.jpg" width="32%" alt="home" />
 <img src="Screenshot_2.jpg" width="32%" alt="home" />
 <img src="Screenshot_3.jpg" width="32%" alt="home" />
+</div>
 
 ## 📄 许可证
 
