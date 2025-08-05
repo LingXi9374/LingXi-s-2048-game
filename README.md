@@ -20,7 +20,7 @@
 
 1.  **克隆项目**
     ```bash
-    git clone https://github.com/LingXi9374/LingXi-s-2048-game.git
+    git clone https://github.com/LingXi9374/LingXis-2048-game.git
     ```
 2.  **在 Android Studio 中打开**
     *   启动 Android Studio
@@ -34,7 +34,9 @@
 
 ## 📸 截图
 
-![Game Screenshot 1](Screenshot_1.jpg) ![Game Screenshot 2](Screenshot_2.jpg) ![Game Screenshot 3](Screenshot_3.jpg)
+<img src="Screenshot_1.jpg" width="1200" alt="home" />
+<img src="Screenshot_2.jpg" width="1200" alt="home" />
+<img src="Screenshot_3.jpg" width="1200" alt="home" />
 
 ## 📄 许可证
 

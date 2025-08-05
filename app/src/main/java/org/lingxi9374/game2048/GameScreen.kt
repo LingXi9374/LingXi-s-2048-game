@@ -1,5 +1,6 @@
 package org.lingxi9374.game2048
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
@@ -64,6 +65,7 @@ import androidx.navigation.NavController
 import org.lingxi9374.game2048.ui.appFontFamily
 import kotlin.math.abs
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun GameScreen(navController: NavController) {
     val context = LocalContext.current
@@ -292,6 +294,7 @@ fun GameScreen(navController: NavController) {
     }
 }
 
+@SuppressLint("DefaultLocale")
 private fun formatTime(milliseconds: Long): String {
     val hours = milliseconds / 3600000
     val minutes = (milliseconds % 3600000) / 60000
@@ -301,6 +304,7 @@ private fun formatTime(milliseconds: Long): String {
 }
 
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun GameBoard(gameViewModel: GameViewModel, modifier: Modifier = Modifier) {
     BoxWithConstraints(
