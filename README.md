@@ -34,9 +34,9 @@
 
 ## 📸 截图
 
-<img src="Screenshot_1.jpg" width="1200" alt="home" />
-<img src="Screenshot_2.jpg" width="1200" alt="home" />
-<img src="Screenshot_3.jpg" width="1200" alt="home" />
+<img src="Screenshot_1.jpg" width="32%" alt="home" />
+<img src="Screenshot_2.jpg" width="32%" alt="home" />
+<img src="Screenshot_3.jpg" width="32%" alt="home" />
 
 ## 📄 许可证
 
