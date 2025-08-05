@@ -1,4 +1,31 @@
 <resources>
     <string name="app_name">LingXi\'s 2048</string>
     <string name="game_screen_score_label">Score: </string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_back_button">Back</string>
+    <string name="settings_change_language">Change Language</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_chinese">中文(中国)</string>
+    <string name="settings_enable_sound">Enable Sound</string>
+    <string name="settings_volume">Volume: %1$d%%</string>
+    <string name="settings_about_button">About This Game</string>
+    <string name="about_title">About</string>
+    <string name="about_version">Version 1.2.0</string>
+    <string name="about_author_title">Author: LingXi9374</string>
+    <string name="about_author_link">https://github.com/LingXi9374</string>
+    <string name="about_repo_title">Repository: LingXis-2048-game</string>
+    <string name="about_repo_link">https://github.com/LingXi9374/LingXis-2048-game</string>
+    <string name="about_github_logo">GitHub Logo</string>
+    <string name="about_open_in_new">Open in new</string>
+    <string name="history_title">History</string>
+    <string name="history_date">Date: %1$s</string>
+    <string name="history_score">Score: %1$d</string>
+    <string name="history_max_tile">Max Tile: %1$d</string>
+    <string name="history_time_elapsed">Time: %1$s</string>
+    <string name="game_over">Game Over!</string>
+    <string name="game_paused">Paused</string>
+    <string name="game_new_game">New Game</string>
+    <string name="game_resume">Resume</string>
+    <string name="game_pause">Pause</string>
+    <string name="game_time">Time: %1$s</string>
 </resources>

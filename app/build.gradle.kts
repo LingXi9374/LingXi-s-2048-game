@@ -15,8 +15,8 @@ android {
         applicationId = "org.lingxi9374.game2048"
         minSdk = 21
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

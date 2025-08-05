@@ -24,13 +24,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.lingxi9374.game2048.R
@@ -42,10 +42,10 @@ fun AboutScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("About", fontFamily = appFontFamily) },
+                title = { HybridFontText(stringResource(R.string.about_title)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.settings_back_button))
                     }
                 },
                 windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
@@ -61,16 +61,14 @@ fun AboutScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "LingXi's 2048",
+            HybridFontText(
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineLarge,
-                fontFamily = appFontFamily,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            Text(
-                text = "Version 1.1.1",
+            HybridFontText(
+                text = stringResource(R.string.about_version),
                 style = MaterialTheme.typography.bodyLarge,
-                fontFamily = appFontFamily,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             HorizontalDivider(
@@ -84,7 +82,7 @@ fun AboutScreen(navController: NavController) {
                     .fillMaxWidth()
                     .clickable {
                         val intent = Intent(Intent.ACTION_VIEW,
-                            "https://github.com/LingXi9374".toUri())
+                            context.getString(R.string.about_author_link).toUri())
                         context.startActivity(intent)
                     }
                     .padding(vertical = 8.dp),
@@ -92,26 +90,24 @@ fun AboutScreen(navController: NavController) {
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_github_logo),
-                    contentDescription = "GitHub Logo",
+                    contentDescription = stringResource(R.string.about_github_logo),
                     modifier = Modifier.size(40.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Author: LingXi9374",
+                    HybridFontText(
+                        text = stringResource(R.string.about_author_title),
                         style = MaterialTheme.typography.bodyLarge,
-                        fontFamily = appFontFamily,
                     )
-                    Text(
-                        text = "https://github.com/LingXi9374",
+                    HybridFontText(
+                        text = stringResource(R.string.about_author_link),
                         style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = appFontFamily,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                    contentDescription = "Open in new",
+                    contentDescription = stringResource(R.string.about_open_in_new),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -126,7 +122,7 @@ fun AboutScreen(navController: NavController) {
                     .fillMaxWidth()
                     .clickable {
                         val intent = Intent(Intent.ACTION_VIEW,
-                            "https://github.com/LingXi9374/LingXis-2048-game".toUri())
+                            context.getString(R.string.about_repo_link).toUri())
                         context.startActivity(intent)
                     }
                     .padding(vertical = 8.dp),
@@ -134,26 +130,24 @@ fun AboutScreen(navController: NavController) {
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_github_logo),
-                    contentDescription = "GitHub Logo",
+                    contentDescription = stringResource(R.string.about_github_logo),
                     modifier = Modifier.size(40.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Repository: LingXis-2048-game",
+                    HybridFontText(
+                        text = stringResource(R.string.about_repo_title),
                         style = MaterialTheme.typography.bodyLarge,
-                        fontFamily = appFontFamily,
                     )
-                    Text(
-                        text = "https://github.com/LingXi9374/LingXis-2048-game",
+                    HybridFontText(
+                        text = stringResource(R.string.about_repo_link),
                         style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = appFontFamily,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                    contentDescription = "Open in new",
+                    contentDescription = stringResource(R.string.about_open_in_new),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }

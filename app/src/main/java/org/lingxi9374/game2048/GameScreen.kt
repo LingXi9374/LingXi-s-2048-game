@@ -1,7 +1,6 @@
 package org.lingxi9374.game2048
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -10,6 +9,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -33,7 +33,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -62,14 +62,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import org.lingxi9374.game2048.ui.appFontFamily
+import org.lingxi9374.game2048.ui.HybridFontText
 import kotlin.math.abs
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun GameScreen(navController: NavController) {
-    val context = LocalContext.current
-    val factory = GameViewModelFactory((context as Activity).application)
+    val application = (LocalContext.current.applicationContext as android.app.Application)
+    val factory = GameViewModelFactory(application)
     val gameViewModel: GameViewModel = viewModel(factory = factory)
     val score by gameViewModel.score
     val isGameOver by gameViewModel.isGameOver
@@ -112,17 +112,16 @@ fun GameScreen(navController: NavController) {
         )
     }
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         val isLandscape = maxWidth > maxHeight
 
         if (isLandscape) {
             // Landscape Layout
             Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                Text(
-                    text = "LingXi's 2048",
+                HybridFontText(
+                    text = stringResource(R.string.app_name),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = appFontFamily,
                     modifier = Modifier.align(Alignment.TopStart)
                 )
 
@@ -140,14 +139,13 @@ fun GameScreen(navController: NavController) {
                                 modifier = Modifier
                                     .matchParentSize()
                                     .clip(RoundedCornerShape(8.dp))
-                                    .background(Color.White.copy(alpha = 0.35f)),
+                                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    "Game Over!",
+                                HybridFontText(
+                                    stringResource(R.string.game_over),
                                     fontSize = 32.sp,
-                                    color = Color.Red,
-                                    fontFamily = appFontFamily
+                                    color = MaterialTheme.colorScheme.error
                                 )
                             }
                         }
@@ -161,7 +159,7 @@ fun GameScreen(navController: NavController) {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.PlayArrow,
-                                    contentDescription = "Paused",
+                                    contentDescription = stringResource(R.string.game_paused),
                                     tint = Color.White,
                                     modifier = Modifier.size(100.dp)
                                 )
@@ -171,39 +169,38 @@ fun GameScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         IconButton(onClick = { gameViewModel.startGame() }) {
-                            Icon(Icons.Filled.Refresh, contentDescription = "New Game")
+                            Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_new_game), tint = MaterialTheme.colorScheme.onBackground)
                         }
                         IconButton(onClick = { gameViewModel.togglePause() }, enabled = !isGameOver) {
                             Icon(
                                 imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
-                                contentDescription = if (isPaused) "Resume" else "Pause"
+                                contentDescription = if (isPaused) stringResource(R.string.game_resume) else stringResource(R.string.game_pause),
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
                         IconButton(onClick = { 
                             gameViewModel.pauseGame()
                             navController.navigate("history") 
                         }) {
-                            Icon(Icons.Filled.History, contentDescription = "History")
+                            Icon(Icons.Filled.History, contentDescription = stringResource(R.string.history_title), tint = MaterialTheme.colorScheme.onBackground)
                         }
                         IconButton(onClick = { 
                             gameViewModel.pauseGame()
                             navController.navigate("settings") 
                         }) {
-                            Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                            Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.settings_title), tint = MaterialTheme.colorScheme.onBackground)
                         }
                     }
                 }
 
-                Text(
-                    text = "${stringResource(R.string.game_screen_score_label)}$score",
+                HybridFontText(
+                    text = stringResource(R.string.game_screen_score_label) + score.toString(),
                     fontSize = 24.sp,
-                    fontFamily = appFontFamily,
                     modifier = Modifier.align(Alignment.BottomStart)
                 )
-                Text(
-                    text = "Time: ${formatTime(timeElapsed)}",
+                HybridFontText(
+                    text = stringResource(R.string.game_time, formatTime(timeElapsed)),
                     fontSize = 24.sp,
-                    fontFamily = appFontFamily,
                     modifier = Modifier.align(Alignment.BottomEnd)
                 )
             }
@@ -214,12 +211,12 @@ fun GameScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text("LingXi's 2048", fontSize = 32.sp, fontWeight = FontWeight.Bold, fontFamily = appFontFamily)
+                HybridFontText(stringResource(R.string.app_name), fontSize = 32.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Time: ${formatTime(timeElapsed)}", fontSize = 24.sp, fontFamily = appFontFamily)
+                    HybridFontText(stringResource(R.string.game_time, formatTime(timeElapsed)), fontSize = 24.sp)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Score: $score", fontSize = 24.sp, fontFamily = appFontFamily)
+                    HybridFontText(stringResource(R.string.game_screen_score_label) + score.toString(), fontSize = 24.sp)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -236,14 +233,13 @@ fun GameScreen(navController: NavController) {
                             modifier = Modifier
                                 .matchParentSize()
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White.copy(alpha = 0.35f)),
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                "Game Over!",
+                            HybridFontText(
+                                stringResource(R.string.game_over),
                                 fontSize = 32.sp,
-                                color = Color.Red,
-                                fontFamily = appFontFamily
+                                color = MaterialTheme.colorScheme.error
                             )
                         }
                     }
@@ -257,7 +253,7 @@ fun GameScreen(navController: NavController) {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.PlayArrow,
-                                contentDescription = "Paused",
+                                contentDescription = stringResource(R.string.game_paused),
                                 tint = Color.White,
                                 modifier = Modifier.size(100.dp)
                             )
@@ -268,25 +264,26 @@ fun GameScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconButton(onClick = { gameViewModel.startGame() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "New Game")
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_new_game), tint = MaterialTheme.colorScheme.onBackground)
                     }
                     IconButton(onClick = { gameViewModel.togglePause() }, enabled = !isGameOver) {
                         Icon(
                             imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
-                            contentDescription = if (isPaused) "Resume" else "Pause"
+                            contentDescription = if (isPaused) stringResource(R.string.game_resume) else stringResource(R.string.game_pause),
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     IconButton(onClick = { 
                         gameViewModel.pauseGame()
                         navController.navigate("history") 
                     }) {
-                        Icon(Icons.Filled.History, contentDescription = "History")
+                        Icon(Icons.Filled.History, contentDescription = stringResource(R.string.history_title), tint = MaterialTheme.colorScheme.onBackground)
                     }
                     IconButton(onClick = { 
                         gameViewModel.pauseGame()
                         navController.navigate("settings") 
                     }) {
-                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                        Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.settings_title), tint = MaterialTheme.colorScheme.onBackground)
                     }
                 }
             }
@@ -307,9 +304,14 @@ private fun formatTime(milliseconds: Long): String {
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun GameBoard(gameViewModel: GameViewModel, modifier: Modifier = Modifier) {
+    val boardBackgroundColor = if (isSystemInDarkTheme()) {
+        Color(0xFF3A3A3C) // A dark grey for the seams in dark mode
+    } else {
+        Color(0xFFCCCCCC) // User-requested light grey for the seams
+    }
     BoxWithConstraints(
         modifier = modifier
-            .background(Color.LightGray, RoundedCornerShape(8.dp))
+            .background(boardBackgroundColor, RoundedCornerShape(8.dp))
     ) {
         val tileSize = maxWidth / gameViewModel.gridSize
 
@@ -331,10 +333,14 @@ fun GameBoard(gameViewModel: GameViewModel, modifier: Modifier = Modifier) {
 
 @Composable
 fun Grid(gridSize: Int, tileSize: Dp) {
+    val gridCellColor = if (isSystemInDarkTheme()) {
+        Color(0xFF58585A) // A slightly lighter grey for the empty cells in dark mode
+    } else {
+        Color(0xFFCDC1B4) // Original empty cell color for light mode
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray, RoundedCornerShape(8.dp))
     ) {
         for (i in 0 until gridSize) {
             for (j in 0 until gridSize) {
@@ -343,7 +349,7 @@ fun Grid(gridSize: Int, tileSize: Dp) {
                         .offset(x = tileSize * j, y = tileSize * i)
                         .size(tileSize)
                         .padding(4.dp)
-                        .background(Color(0xFFCDC1B4), RoundedCornerShape(8.dp))
+                        .background(gridCellColor, RoundedCornerShape(8.dp))
                 )
             }
         }
@@ -391,6 +397,13 @@ fun AnimatedTile(tile: Tile, tileSize: Dp) {
         label = "popScale"
     )
 
+    val tileBackgroundColor = getTileColor(value = tile.value)
+    val textColor = if (isSystemInDarkTheme()) {
+        if (tile.value > 4) Color.White else Color.Black
+    } else {
+        if (tile.value > 4) Color.White else Color.Black
+    }
+
     Box(
         modifier = Modifier
             .offset(x = animatedX.value, y = animatedY.value)
@@ -398,15 +411,14 @@ fun AnimatedTile(tile: Tile, tileSize: Dp) {
             .padding(4.dp)
             .scale(animatedScale * animatedPopScale)
             .alpha(animatedAlpha)
-            .background(getTileColor(tile.value), RoundedCornerShape(8.dp)),
+            .background(tileBackgroundColor, RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Text(
+        HybridFontText(
             text = tile.value.toString(),
             fontSize = (tileSize.value / 3).sp,
             fontWeight = FontWeight.Bold,
-            color = if (tile.value > 4) Color.White else Color.Black,
-            fontFamily = appFontFamily
+            color = textColor
         )
     }
 }
@@ -440,29 +452,47 @@ fun ScorePopup(data: ScoreAnimationData, tileSize: Dp) {
             .alpha(alpha),
         contentAlignment = Alignment.Center
     ) {
-        Text(
+        HybridFontText(
             text = "+${data.value}",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF6d5f57),
-            fontFamily = appFontFamily
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
 
+@Composable
 fun getTileColor(value: Int): Color {
-    return when (value) {
-        2 -> Color(0xFFEEE4DA)
-        4 -> Color(0xFFEDE0C8)
-        8 -> Color(0xFFF2B179)
-        16 -> Color(0xFFF59563)
-        32 -> Color(0xFFF67C5F)
-        64 -> Color(0xFFF65E3B)
-        128 -> Color(0xFFEDCF72)
-        256 -> Color(0xFFEDCC61)
-        512 -> Color(0xFFEDC850)
-        1024 -> Color(0xFFEDC53F)
-        2048 -> Color(0xFFEDC22E)
-        else -> Color(0xFF3C3A32)
+    val isDark = isSystemInDarkTheme()
+    return if (isDark) {
+        when (value) {
+            2 -> Color(0xFF4E5D6A)
+            4 -> Color(0xFF5A6A7A)
+            8 -> Color(0xFF6A8A9A)
+            16 -> Color(0xFF7AAABF)
+            32 -> Color(0xFF8AC5E2)
+            64 -> Color(0xFF9BDFFF)
+            128 -> Color(0xFF7BC5E2)
+            256 -> Color(0xFF5DAABF)
+            512 -> Color(0xFF3E8F9A)
+            1024 -> Color(0xFF1F757A)
+            2048 -> Color(0xFF005F5A)
+            else -> Color(0xFF19324A)
+        }
+    } else {
+        when (value) {
+            2 -> Color(0xFFEEE4DA)
+            4 -> Color(0xFFEDE0C8)
+            8 -> Color(0xFFF2B179)
+            16 -> Color(0xFFF59563)
+            32 -> Color(0xFFF67C5F)
+            64 -> Color(0xFFF65E3B)
+            128 -> Color(0xFFEDCF72)
+            256 -> Color(0xFFEDCC61)
+            512 -> Color(0xFFEDC850)
+            1024 -> Color(0xFFEDC53F)
+            2048 -> Color(0xFFEDC22E)
+            else -> Color(0xFF3C3A32)
+        }
     }
 }

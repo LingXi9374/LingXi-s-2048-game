@@ -1,9 +1,5 @@
 package org.lingxi9374.game2048.ui
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,9 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -42,45 +37,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
+import org.lingxi9374.game2048.LocalLocaleManager
+import org.lingxi9374.game2048.R
 import org.lingxi9374.game2048.SettingsManager
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
     val context = LocalContext.current
     val settingsManager = remember { SettingsManager(context) }
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     var soundEnabled by remember { mutableStateOf(settingsManager.isSoundEnabled()) }
     var soundVolume by remember { mutableFloatStateOf(settingsManager.getSoundVolume()) }
     var languageDropdownExpanded by remember { mutableStateOf(false) }
-
-    fun Context.findActivity() : Activity? = when(this){
-        is Activity -> this
-        is ContextWrapper -> baseContext.findActivity()
-        else -> null
-    }
-
-    val onLanguageSelected = { languageCode: String ->
-        context.findActivity()?.runOnUiThread {
-            val appLocale = LocaleListCompat.forLanguageTags(languageCode)
-            AppCompatDelegate.setApplicationLocales(appLocale)
-        }
-    }
+    val localeManager = LocalLocaleManager.current
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
-                title = { Text("Settings", fontFamily = appFontFamily) },
+                title = { HybridFontText(stringResource(R.string.settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.settings_back_button))
                     }
                 },
                 modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
@@ -103,13 +87,13 @@ fun SettingsScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        "Change Language",
+                    HybridFontText(
+                        stringResource(R.string.settings_change_language),
                         style = MaterialTheme.typography.bodyLarge,
                     )
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Change Language",
+                        contentDescription = stringResource(R.string.settings_change_language),
                     )
                 }
 
@@ -122,18 +106,24 @@ fun SettingsScreen(navController: NavController) {
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
-                    Text(
-                        "English",
+                    HybridFontText(
+                        stringResource(R.string.settings_language_english),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onLanguageSelected("en"); languageDropdownExpanded = false }
+                            .clickable {
+                                localeManager.locale = Locale("en")
+                                languageDropdownExpanded = false
+                            }
                             .padding(16.dp)
                     )
-                    Text(
-                        "中文(中国)",
+                    HybridFontText(
+                        stringResource(R.string.settings_language_chinese),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onLanguageSelected("zh-CN"); languageDropdownExpanded = false }
+                            .clickable {
+                                localeManager.locale = Locale("zh", "CN")
+                                languageDropdownExpanded = false
+                            }
                             .padding(16.dp)
                     )
                 }
@@ -144,7 +134,7 @@ fun SettingsScreen(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Enable Sound", style = MaterialTheme.typography.bodyLarge)
+                HybridFontText(stringResource(R.string.settings_enable_sound), style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = soundEnabled,
                     onCheckedChange = {
@@ -156,7 +146,7 @@ fun SettingsScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Volume: ${(soundVolume * 100).toInt()}%", style = MaterialTheme.typography.bodyLarge)
+            HybridFontText(stringResource(R.string.settings_volume, (soundVolume * 100).toInt()), style = MaterialTheme.typography.bodyLarge)
             Slider(
                 value = soundVolume,
                 onValueChange = {
@@ -169,7 +159,7 @@ fun SettingsScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(onClick = { navController.navigate("about") }) {
-                Text("About This Game", style = MaterialTheme.typography.bodyLarge)
+                HybridFontText(stringResource(R.string.settings_about_button), style = MaterialTheme.typography.bodyLarge)
             }
         }
     }

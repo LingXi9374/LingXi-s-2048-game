@@ -31,19 +31,20 @@ class MainActivity : ComponentActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
 
         setContent {
-            LingXis2048Theme {
-                Surface(
-                    modifier = Modifier
-                                .fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "game") {
-                        composable("game") { GameScreen(navController) }
-                        composable("settings") { SettingsScreen(navController) }
-                        composable("about") { AboutScreen(navController) }
-                        composable("history") { HistoryScreen(navController) }
-                        composable("about") { AboutScreen(navController) }
+            ProvideLocale {
+                LingXis2048Theme {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        val navController = rememberNavController()
+                        NavHost(navController = navController, startDestination = "game") {
+                            composable("game") { GameScreen(navController) }
+                            composable("settings") { SettingsScreen(navController) }
+                            composable("about") { AboutScreen(navController) }
+                            composable("history") { HistoryScreen(navController) }
+                        }
                     }
                 }
             }

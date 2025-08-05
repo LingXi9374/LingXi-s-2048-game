@@ -23,17 +23,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.lingxi9374.game2048.HistoryEntry
 import org.lingxi9374.game2048.HistoryManager
+import org.lingxi9374.game2048.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -49,10 +50,10 @@ fun HistoryScreen(navController: NavController) {
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
-                title = { Text("History", fontFamily = appFontFamily) },
+                title = { HybridFontText(stringResource(R.string.history_title)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.settings_back_button))
                     }
                 },
                 modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
@@ -82,13 +83,13 @@ fun HistoryCard(entry: HistoryEntry) {
             val formattedDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 .format(Date(entry.timestamp))
 
-            Text(text = "Date: $formattedDate", style = MaterialTheme.typography.bodySmall)
+            HybridFontText(text = stringResource(R.string.history_date, formattedDate), style = MaterialTheme.typography.bodySmall)
             Spacer(modifier = Modifier.height(8.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Score: ${entry.score}")
-                Text("Max Tile: ${entry.maxTile}")
+                HybridFontText(stringResource(R.string.history_score, entry.score))
+                HybridFontText(stringResource(R.string.history_max_tile, entry.maxTile))
             }
-            Text("Time: ${formatTime(entry.timeElapsed)}")
+            HybridFontText(stringResource(R.string.history_time_elapsed, formatTime(entry.timeElapsed)))
         }
     }
 }
