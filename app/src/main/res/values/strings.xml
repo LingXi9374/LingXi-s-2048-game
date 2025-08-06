@@ -6,6 +6,7 @@
     <string name="settings_change_language">Change Language</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_chinese">中文(中国)</string>
+    <string name="settings_language_japanese">日本語</string>
     <string name="settings_enable_sound">Enable Sound</string>
     <string name="settings_volume">Volume: %1$d%%</string>
     <string name="settings_about_button">About This Game</string>
