@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">泠熙的2048</string>
+    <string name="game_screen_score_label">分数：</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_back_button">返回</string>
+    <string name="settings_change_language">切换语言</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_chinese">中文(中国)</string>
+    <string name="settings_language_japanese">日本語</string>
+    <string name="settings_enable_sound">开启声音</string>
+    <string name="settings_volume">音量: %1$d%%</string>
+    <string name="settings_about_button">关于此游戏</string>
+    <string name="about_title">关于</string>
+    <string name="about_version">版本 1.2.0</string>
+    <string name="about_author_title">作者: LingXi9374</string>
+    <string name="about_author_link">https://github.com/LingXi9374</string>
+    <string name="about_repo_title">仓库: LingXis-2048-game</string>
+    <string name="about_repo_link">https://github.com/LingXi9374/LingXis-2048-game</string>
+    <string name="about_github_logo">GitHub Logo</string>
+    <string name="about_open_in_new">在新窗口中打开</string>
+    <string name="history_title">历史记录</string>
+    <string name="history_date">日期: %1$s</string>
+    <string name="history_score">分数: %1$d</string>
+    <string name="history_max_tile">最大方块: %1$d</string>
+    <string name="history_time_elapsed">用时: %1$s</string>
+    <string name="game_over">游戏结束!</string>
+    <string name="game_paused">已暂停</string>
+    <string name="game_new_game">新游戏</string>
+    <string name="game_resume">继续</string>
+    <string name="game_pause">暂停</string>
+    <string name="game_time">时间: %1$s</string>
+</resources>
