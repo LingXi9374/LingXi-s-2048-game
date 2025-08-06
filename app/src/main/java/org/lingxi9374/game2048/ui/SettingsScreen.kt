@@ -126,6 +126,16 @@ fun SettingsScreen(navController: NavController) {
                             }
                             .padding(16.dp)
                     )
+                    HybridFontText(
+                        stringResource(R.string.settings_language_japanese),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                localeManager.locale = Locale("ja")
+                                languageDropdownExpanded = false
+                            }
+                            .padding(16.dp)
+                    )
                 }
             }
 

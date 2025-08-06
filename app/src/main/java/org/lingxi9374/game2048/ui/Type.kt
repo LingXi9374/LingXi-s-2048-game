@@ -9,3 +9,6 @@ val englishFontFamily = FontFamily(Font(R.font.leigo_regular))
 
 // Font family specifically for Chinese
 val chineseFontFamily = FontFamily(Font(R.font.han_yi_cu_yuan_jian))
+
+// Font family specifically for Japanese
+val japaneseFontFamily = FontFamily(Font(R.font.tsuku_ard_gothic_std))
