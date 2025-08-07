@@ -15,7 +15,7 @@
     <string name="settings_volume">Volume: %1$d%%</string>
     <string name="settings_about_button">About This Game</string>
     <string name="about_title">About</string>
-    <string name="about_version">Version 1.2.0</string>
+    <string name="about_version">Version 1.2.1</string>
     <string name="about_author_title">Author: LingXi9374</string>
     <string name="about_author_link">https://github.com/LingXi9374</string>
     <string name="about_repo_title">Repository: LingXis-2048-game</string>

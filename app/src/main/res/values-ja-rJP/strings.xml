@@ -15,7 +15,7 @@
     <string name="settings_volume">音量: %1$d%%</string>
     <string name="settings_about_button">遊戯に就いて</string>
     <string name="about_title">情報</string>
-    <string name="about_version"> 第1.2.0版</string>
+    <string name="about_version"> 第1.2.1版</string>
     <string name="about_author_title">作者: LingXi9374</string>
     <string name="about_author_link">https://github.com/LingXi9374</string>
     <string name="about_repo_title">Repository(保管庫): LingXis-2048-game</string>

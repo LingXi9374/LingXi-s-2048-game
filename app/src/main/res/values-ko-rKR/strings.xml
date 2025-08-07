@@ -15,7 +15,7 @@
     <string name="settings_volume">볼륨: %1$d%%</string>
     <string name="settings_about_button">이 게임에 대하여</string>
     <string name="about_title">정보</string>
-    <string name="about_version">버전 1.2.0</string>
+    <string name="about_version">버전 1.2.1</string>
     <string name="about_author_title">만든이: LingXi9374</string>
     <string name="about_author_link">https://github.com/LingXi9374</string>
     <string name="about_repo_title">저장소: LingXis-2048-game</string>

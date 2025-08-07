@@ -15,7 +15,7 @@
     <string name="settings_volume">音量: %1$d%%</string>
     <string name="settings_about_button">關於此遊戲</string>
     <string name="about_title">關於</string>
-    <string name="about_version">版本 1.2.0</string>
+    <string name="about_version">版本 1.2.1</string>
     <string name="about_author_title">作者: LingXi9374</string>
     <string name="about_author_link">https://github.com/LingXi9374</string>
     <string name="about_repo_title">倉庫: LingXis-2048-game</string>
