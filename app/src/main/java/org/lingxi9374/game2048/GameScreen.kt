@@ -456,7 +456,7 @@ fun ScorePopup(data: ScoreAnimationData, tileSize: Dp) {
             text = "+${data.value}",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = if (isSystemInDarkTheme()) Color.White else Color.Black
         )
     }
 }

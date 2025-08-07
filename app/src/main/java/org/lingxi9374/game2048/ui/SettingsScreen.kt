@@ -114,17 +114,41 @@ fun SettingsScreen(navController: NavController) {
                                 localeManager.locale = Locale("en")
                                 languageDropdownExpanded = false
                             }
-                            .padding(16.dp)
+                            .padding(16.dp),
+                        overrideLocale = Locale("en")
                     )
                     HybridFontText(
-                        stringResource(R.string.settings_language_chinese),
+                        stringResource(R.string.settings_language_chinese_simplified),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 localeManager.locale = Locale("zh", "CN")
                                 languageDropdownExpanded = false
                             }
-                            .padding(16.dp)
+                            .padding(16.dp),
+                        overrideLocale = Locale("zh", "CN")
+                    )
+                    HybridFontText(
+                        stringResource(R.string.settings_language_chinese_traditional_hk),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                localeManager.locale = Locale("zh", "HK")
+                                languageDropdownExpanded = false
+                            }
+                            .padding(16.dp),
+                        overrideLocale = Locale("zh", "HK")
+                    )
+                    HybridFontText(
+                        stringResource(R.string.settings_language_chinese_traditional_tw),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                localeManager.locale = Locale("zh", "TW")
+                                languageDropdownExpanded = false
+                            }
+                            .padding(16.dp),
+                        overrideLocale = Locale("zh", "TW")
                     )
                     HybridFontText(
                         stringResource(R.string.settings_language_japanese),
@@ -134,7 +158,19 @@ fun SettingsScreen(navController: NavController) {
                                 localeManager.locale = Locale("ja")
                                 languageDropdownExpanded = false
                             }
-                            .padding(16.dp)
+                            .padding(16.dp),
+                        overrideLocale = Locale("ja")
+                    )
+                    HybridFontText(
+                        stringResource(R.string.settings_language_korean),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                localeManager.locale = Locale("ko")
+                                languageDropdownExpanded = false
+                            }
+                            .padding(16.dp),
+                        overrideLocale = Locale("ko")
                     )
                 }
             }

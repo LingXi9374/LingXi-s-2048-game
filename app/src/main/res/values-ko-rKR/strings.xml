@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">링시의 2048</string>
+    <string name="game_screen_score_label">점수: </string>
+    <string name="settings_title">설정</string>
+    <string name="settings_back_button">뒤로</string>
+    <string name="settings_change_language">언어 변경</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_chinese_simplified">简体中文(中国大陆)</string>
+    <string name="settings_language_chinese_traditional_hk">繁體中文(中國香港)</string>
+    <string name="settings_language_chinese_traditional_tw">繁體中文(中國臺灣)</string>
+    <string name="settings_language_korean">한국어</string>
+    <string name="settings_language_japanese">日本語</string>
+    <string name="settings_enable_sound">소리 켜기</string>
+    <string name="settings_volume">볼륨: %1$d%%</string>
+    <string name="settings_about_button">이 게임에 대하여</string>
+    <string name="about_title">정보</string>
+    <string name="about_version">버전 1.2.0</string>
+    <string name="about_author_title">만든이: LingXi9374</string>
+    <string name="about_author_link">https://github.com/LingXi9374</string>
+    <string name="about_repo_title">저장소: LingXis-2048-game</string>
+    <string name="about_repo_link">https://github.com/LingXi9374/LingXis-2048-game</string>
+    <string name="about_github_logo">GitHub 로고</string>
+    <string name="about_open_in_new">새 창에서 열기</string>
+    <string name="history_title">기록</string>
+    <string name="history_date">날짜: %1$s</string>
+    <string name="history_score">점수: %1$d</string>
+    <string name="history_max_tile">최대 타일: %1$d</string>
+    <string name="history_time_elapsed">경과 시간: %1$s</string>
+    <string name="game_over">게임 종료!</string>
+    <string name="game_paused">일시정지됨</string>
+    <string name="game_new_game">새 게임</string>
+    <string name="game_resume">계속</string>
+    <string name="game_pause">일시정지</string>
+    <string name="game_time">시간: %1$s</string>
+</resources>

@@ -6,7 +6,10 @@
     <string name="settings_back_button">戻る</string>
     <string name="settings_change_language">言語設定</string>
     <string name="settings_language_english">English</string>
-    <string name="settings_language_chinese">中文(中国)</string>
+    <string name="settings_language_chinese_simplified">简体中文(中国大陆)</string>
+    <string name="settings_language_chinese_traditional_hk">繁體中文(中國香港)</string>
+    <string name="settings_language_chinese_traditional_tw">繁體中文(中國臺灣)</string>
+    <string name="settings_language_korean">한국어</string>
     <string name="settings_language_japanese">日本語</string>
     <string name="settings_enable_sound">音声有効</string>
     <string name="settings_volume">音量: %1$d%%</string>

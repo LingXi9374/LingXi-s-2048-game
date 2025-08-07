@@ -1,11 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LingXi\'s 2048</string>
     <string name="game_screen_score_label">Score: </string>
     <string name="settings_title">Settings</string>
     <string name="settings_back_button">Back</string>
     <string name="settings_change_language">Change Language</string>
-    <string name="settings_language_english">English</string>
-    <string name="settings_language_chinese">中文(中国)</string>
+    <string name="settings_language_english">English(US)</string>
+    <string name="settings_language_chinese_simplified">简体中文(中国大陆)</string>
+    <string name="settings_language_chinese_traditional_hk">繁體中文(中國香港)</string>
+    <string name="settings_language_chinese_traditional_tw">繁體中文(中國臺灣)</string>
+    <string name="settings_language_korean">한국어</string>
     <string name="settings_language_japanese">日本語</string>
     <string name="settings_enable_sound">Enable Sound</string>
     <string name="settings_volume">Volume: %1$d%%</string>

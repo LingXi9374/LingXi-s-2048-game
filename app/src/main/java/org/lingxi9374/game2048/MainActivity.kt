@@ -7,6 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
@@ -39,7 +42,14 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                     ) {
                         val navController = rememberNavController()
-                        NavHost(navController = navController, startDestination = "game") {
+                        NavHost(
+                            navController = navController, 
+                            startDestination = "game",
+                            enterTransition = { fadeIn(animationSpec = tween(300)) },
+                            exitTransition = { fadeOut(animationSpec = tween(300)) },
+                            popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                            popExitTransition = { fadeOut(animationSpec = tween(300)) }
+                        ) {
                             composable("game") { GameScreen(navController) }
                             composable("settings") { SettingsScreen(navController) }
                             composable("about") { AboutScreen(navController) }

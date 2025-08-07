@@ -1,18 +1,18 @@
+@file:OptIn(kotlinx.serialization.InternalSerializationApi::class)
 package org.lingxi9374.game2048
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
+
 
 @Serializable
 data class HistoryEntry(
@@ -34,7 +34,7 @@ class HistoryManager(private val context: Context) {
             } else {
                 emptyList()
             }
-        }
+        }.flowOn(Dispatchers.Default)
 
     suspend fun addHistoryEntry(entry: HistoryEntry) {
         context.dataStore.edit { preferences ->
