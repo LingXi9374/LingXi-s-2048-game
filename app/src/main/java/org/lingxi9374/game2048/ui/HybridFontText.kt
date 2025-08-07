@@ -40,7 +40,7 @@ fun HybridFontText(
     val annotatedString = buildAnnotatedString {
         for (char in text) {
             val isKana = char.toString().matches(Regex("[\u3040-\u30ff]"))
-            val isCjkSymbol = char.toString().matches(Regex("[\u3000-\u303f]"))
+            val isCjkSymbol = char.toString().matches(Regex("[\u1100-\ud7ff]"))
             val isHanzi = char.toString().matches(Regex("[\u4e00-\u9fa5]"))
 
             val fontFamily = when {
