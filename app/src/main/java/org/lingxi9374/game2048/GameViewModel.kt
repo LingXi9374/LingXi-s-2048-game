@@ -30,6 +30,8 @@ data class Tile(
 
 data class ScoreAnimationData(val value: Int, val position: Pair<Int, Int>, val id: String = UUID.randomUUID().toString())
 
+private data class GameState(val tiles: List<Tile>, val score: Int)
+
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     val gridSize = 4
     val tiles = mutableStateListOf<Tile>()
@@ -38,12 +40,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val timeElapsed = mutableLongStateOf(0L)
     val scoreAnimation = mutableStateListOf<ScoreAnimationData>()
     val isPaused = mutableStateOf(false)
+    val undoCount = mutableIntStateOf(0)
     private var timerJob: Job? = null
     private var isGameStarted = false
     private var timerStartTime = 0L
     private var timePaused = 0L
     private val soundManager = SoundManager(application.applicationContext)
     private val historyManager = HistoryManager(application.applicationContext)
+    private val historyStack = mutableListOf<GameState>()
+    private var scoreThresholdForUndo = 300
 
     init {
         startGame()
@@ -52,7 +57,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun startGame() {
         timerJob?.cancel()
         tiles.clear()
+        historyStack.clear()
         score.intValue = 0
+        undoCount.intValue = 0
+        scoreThresholdForUndo = 300
         isGameOver.value = false
         isGameStarted = false
         isPaused.value = false
@@ -60,6 +68,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         timerStartTime = 0L
         addRandomTile()
         addRandomTile()
+    }
+
+    fun undoMove() {
+        if (historyStack.isNotEmpty() && undoCount.intValue > 0) {
+            val lastState = historyStack.removeAt(historyStack.lastIndex)
+            tiles.clear()
+            tiles.addAll(lastState.tiles)
+            score.intValue = lastState.score
+            undoCount.intValue--
+
+            // Adjust the score threshold downwards if the score has dropped below the previous threshold
+            while (score.intValue < scoreThresholdForUndo - 300 && scoreThresholdForUndo > 300) {
+                scoreThresholdForUndo -= 300
+            }
+            // If the game was over, it might not be anymore
+            if (isGameOver.value) {
+                isGameOver.value = false
+                startTimer() // Resume timer if game is no longer over
+            }
+        }
     }
 
     fun pauseGame() {
@@ -110,6 +138,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             startTimer()
         }
 
+        // Save current state before making a move
+        historyStack.add(GameState(tiles.map { it.copy() }, score.intValue))
+
         val nextTiles = tiles.map { it.copy(isNew = false, isMerged = false, isMerging = false) }.toMutableList()
         var moved = false
         var scoreIncrease = 0
@@ -144,7 +175,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             val nextTileInList = nextTiles.find { it.position == nextPos && !it.isMerging && !it.isMerged }
             if (nextTileInList != null && nextTileInList.value == currentTile.value) {
                 val mergedValue = currentTile.value * 2
-                scoreIncrease += currentTile.value
+                scoreIncrease += mergedValue // Score increases by the value of the new tile
 
                 val mergedTile = Tile(
                     value = mergedValue,
@@ -176,6 +207,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 soundManager.playSound(SoundManager.MOVE_SOUND)
             }
             score.intValue += scoreIncrease
+
+            // Grant undo charges based on score
+            while (score.intValue >= scoreThresholdForUndo) {
+                undoCount.intValue++
+                scoreThresholdForUndo += 300
+            }
 
             // 1. Set the state that includes all moving and merging tiles.
             tiles.clear()

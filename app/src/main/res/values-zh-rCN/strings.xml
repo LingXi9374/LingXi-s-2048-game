@@ -33,4 +33,5 @@
     <string name="game_resume">继续</string>
     <string name="game_pause">暂停</string>
     <string name="game_time">时间: %1$s</string>
+    <string name="undo">撤回</string>
 </resources>

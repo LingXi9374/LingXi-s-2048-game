@@ -33,4 +33,5 @@
     <string name="game_resume">続きなさいよ</string>
     <string name="game_pause">もう良い！中止するよ！</string>
     <string name="game_time">掛った時間: %1$s</string>
+    <string name="undo">一手戻す</string>
 </resources>

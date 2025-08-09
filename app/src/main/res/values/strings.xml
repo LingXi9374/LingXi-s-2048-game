@@ -33,4 +33,5 @@
     <string name="game_resume">Resume</string>
     <string name="game_pause">Pause</string>
     <string name="game_time">Time: %1$s</string>
+    <string name="undo">Undo</string>
 </resources>

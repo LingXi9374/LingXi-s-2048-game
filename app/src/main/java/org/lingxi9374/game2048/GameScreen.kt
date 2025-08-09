@@ -26,11 +26,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -65,6 +68,7 @@ import androidx.navigation.NavController
 import org.lingxi9374.game2048.ui.HybridFontText
 import kotlin.math.abs
 
+@OptIn(androidx.compose.animation.ExperimentalAnimationApi::class)
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun GameScreen(navController: NavController) {
@@ -75,6 +79,7 @@ fun GameScreen(navController: NavController) {
     val isGameOver by gameViewModel.isGameOver
     val timeElapsed by gameViewModel.timeElapsed
     val isPaused by gameViewModel.isPaused
+    val undoCount by gameViewModel.undoCount
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -171,6 +176,21 @@ fun GameScreen(navController: NavController) {
                         IconButton(onClick = { gameViewModel.startGame() }) {
                             Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_new_game), tint = MaterialTheme.colorScheme.onBackground)
                         }
+                        IconButton(onClick = { gameViewModel.undoMove() }, enabled = undoCount > 0 && !isGameOver) {
+                            BadgedBox(badge = {
+                                if (undoCount > 0) {
+                                    Badge {
+                                        HybridFontText(text = undoCount.toString())
+                                    }
+                                }
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.Undo, 
+                                    contentDescription = stringResource(R.string.undo),
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                        }
                         IconButton(onClick = { gameViewModel.togglePause() }, enabled = !isGameOver) {
                             Icon(
                                 imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
@@ -265,6 +285,21 @@ fun GameScreen(navController: NavController) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconButton(onClick = { gameViewModel.startGame() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_new_game), tint = MaterialTheme.colorScheme.onBackground)
+                    }
+                    IconButton(onClick = { gameViewModel.undoMove() }, enabled = undoCount > 0 && !isGameOver) {
+                        BadgedBox(badge = {
+                            if (undoCount > 0) {
+                                Badge {
+                                    HybridFontText(text = undoCount.toString())
+                                }
+                            }
+                        }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.Undo,
+                                contentDescription = stringResource(R.string.undo),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
                     }
                     IconButton(onClick = { gameViewModel.togglePause() }, enabled = !isGameOver) {
                         Icon(
